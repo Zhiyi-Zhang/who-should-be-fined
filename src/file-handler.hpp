@@ -4,6 +4,7 @@
 #include <iostream>
 #include <list>
 #include <utility>
+#include <vector>
 
 static int FIELD = 100; // the value of x in R%x to drop some rows for receiver
 static int TOTAL_RECEIVER = 3; // ID: 1, 2, 3
@@ -57,13 +58,13 @@ shuffleList(std::list<uint16_t>& keywords);
 // Step1: use row number to determine the rows sent to receiver @receiverID
 // Step2: order the selected keywords and append them into the result @forReceiver
 void
-keyWordsForReceiver(const std::list<uint16_t>& wholeSet, std::list<uint16_t>& forReceiver, 
-                    int receiverID, int maskRange = OT_LOSS_RATE_NUMERATOR, 
+keyWordsForReceiver(const std::list<uint16_t>& wholeSet, std::list<uint16_t>& forReceiver,
+                    int receiverID, int maskRange = OT_LOSS_RATE_NUMERATOR,
                     int field = OT_LOSS_RATE_DENOMINATOR);
 
 // read rows from the dataset into the buf
 void
-extractKeyWordsRows(const std::string& fileName, const std::list<uint16_t>& keywords, char* buf);
+extractKeyWordsRows(const std::list<std::string>& fileNames, const std::list<uint16_t>& keywords, std::list<std::string>& buf);
 
 
 #endif // FILE_HANDLER_H

@@ -151,8 +151,41 @@ keyWordsForReceiver(const std::list<uint16_t>& wholeSet, std::list<uint16_t>& fo
 }
 
 void
-extractKeyWordsRows(const std::string& fileName, const std::list<uint16_t>& keywords, char* buf)
+extractKeyWordsRows(const std::list<std::string>& fileNames, const std::list<uint16_t>& keywords,std::list<std::string>& buf)
 {
+  auto keywordsIt = keywords.begin();
+  bool match = false;
+  std::string line;
+  std::string rows;
+
+  for (auto fileName : fileNames) {
+    std::ifstream data(fileName);
+    while(std::getline(data, line)) {
+      if (line.find(":") != std::string::npos) {
+        if (rows.size() > 0) {
+          buf.push_back(rows);
+          rows.clear();
+        }
+        if (line == std::to_string(*keywordsIt) + ":") {
+          keywordsIt++;
+          match = true;
+        }
+        else {
+          match = false;
+        }
+        continue;
+      }
+      if (match) {
+        rows = rows + line + "\n";
+      }
+    }
+    data.close();
+  }
+
+  // insert the results for the last keyword
+  if (rows.size() > 0) {
+    buf.push_back(rows);
+  }
   return;
 }
 

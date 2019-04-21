@@ -1,8 +1,8 @@
 #include "file-handler.hpp"
 #include <fstream>
 
-int
-main(int argc, char* argv[])
+void
+generateKeywordList()
 {
   /*======================For The First Time Parse Data========================*/
   // // get the keywords
@@ -72,6 +72,20 @@ main(int argc, char* argv[])
   forAFile.close();
   forBFile.close();
   forCFile.close();
+}
+
+int
+main(int argc, char* argv[])
+{
+  std::list<uint16_t> keywords;
+  keywords.push_back(1);
+  std::list<std::string> fileNames;
+  fileNames.push_back("../../netflix-prize-data/combined_data_1.txt");
+
+  std::list<std::string> buf;
+  extractKeyWordsRows(fileNames, keywords, buf);
+  std::cout << "buf" << buf.front() << std::endl;
+  std::cout << "Buf Size" << buf.front().size();
 
   return 0;
 }
