@@ -69,12 +69,18 @@ OBJS+= consts4x.o
 
 ######################################################
 
-all: ot_sender_test ot_receiver_test
+all: ot_sender_test ot_receiver_test ot_sender_for_AES ot_receiver_for_AES
 
 ot_sender_test: ot_sender_test.o $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $^
 
 ot_receiver_test: ot_receiver_test.o $(OBJS)
+	$(CC) $(CFLAGS) -o $@ $^
+
+ot_sender_for_AES: ot_sender_for_AES.o $(OBJS)
+	$(CC) $(CFLAGS) -o $@ $^
+
+ot_receiver_for_AES: ot_receiver_for_AES.o $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $^
 
 %.o: %.c
@@ -90,5 +96,7 @@ ot_receiver_test: ot_receiver_test.o $(OBJS)
 clean:
 	-rm -f ot_sender_test
 	-rm -f ot_receiver_test
+	-rm -f ot_sender_for_AES
+	-rm -f ot_receiver_for_AES
 	-rm -f *.o
 
