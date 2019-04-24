@@ -71,7 +71,21 @@ public:
 			--z;
 		}
 	}
+  
 
+template<>
+void seed(std::seed_seq& s)
+{
+	std::uint32_t vals[randsiz() << 1];
+	s.generate(vals, vals + (randsiz() << 1));
+
+	for (std::size_t i=0, j=0; i<randsiz()<<1; i+=2, ++j) {
+		this->m_randrsl[j] = (std::uint64_t(vals[i]) << 32) | vals[i+1];
+	}
+
+	this->init();
+}
+  
 private:
 	std::size_t m_randcnt;
 	result_type m_randrsl[256];
@@ -209,17 +223,5 @@ private:
 	isaac64_engine& operator=(const isaac64_engine&) = delete;
 };
 
-template<>
-void isaac64_engine::seed(std::seed_seq& s)
-{
-	std::uint32_t vals[randsiz() << 1];
-	s.generate(vals, vals + (randsiz() << 1));
-
-	for (std::size_t i=0, j=0; i<randsiz()<<1; i+=2, ++j) {
-		this->m_randrsl[j] = (std::uint64_t(vals[i]) << 32) | vals[i+1];
-	}
-
-	this->init();
-}
 
 #endif // ISAAC64_ENGINE_H
