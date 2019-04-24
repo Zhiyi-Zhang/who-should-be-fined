@@ -1,4 +1,5 @@
 #include "file-handler.hpp"
+#include "crypto-helper.hpp"
 #include <fstream>
 
 void
@@ -74,18 +75,29 @@ generateKeywordList()
   forCFile.close();
 }
 
+void
+prepareDataToSend()
+{
+  std::list<uint16_t> keywordsA = parseKeyWordsFile("../../datasets/forAFile.txt");
+  std::list<std::string> fileNames;
+  fileNames.push_back("../../netflix-prize-data/combined_data_1.txt");
+  fileNames.push_back("../../netflix-prize-data/combined_data_2.txt");
+  fileNames.push_back("../../netflix-prize-data/combined_data_3.txt");
+  fileNames.push_back("../../netflix-prize-data/combined_data_4.txt");
+
+  extractKeyWordsRows(fileNames, keywordsA, "../../datasets/A");
+}
+
 int
 main(int argc, char* argv[])
 {
-  std::list<uint16_t> keywords;
-  keywords.push_back(1);
-  std::list<std::string> fileNames;
-  fileNames.push_back("../../netflix-prize-data/combined_data_1.txt");
+  std::string input = "abcdefg1234567abcdefg1234567abcdefg1234567abcdefg1234567abcdefg1234567abcdefg1234567abcdefg1234567";
+  
+  uint8_t* aesKey = nullptr;
+  // generateAesKey(generator, aesKey);
 
-  std::list<std::string> buf;
-  extractKeyWordsRows(fileNames, keywords, buf);
-  std::cout << "buf" << buf.front() << std::endl;
-  std::cout << "Buf Size" << buf.front().size();
 
+
+  delete[] aesKey;
   return 0;
 }

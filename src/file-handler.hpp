@@ -1,6 +1,7 @@
 #ifndef FILE_HANDLER_H
 #define FILE_HANDLER_H
 
+#include "isaac.hpp"
 #include <iostream>
 #include <list>
 #include <utility>
@@ -46,6 +47,10 @@ parseHeatMap(const std::string& fileName);
 std::list<uint16_t>
 parseHeatMapOnlyKeys(const std::string& fileName);
 
+// get the keywords only
+std::list<uint16_t>
+parseKeyWordsFile(const std::string& fileName);
+
 // return popular keyword list, remaining keywords are in @afterStrip
 void
 stripPopularRecords(const std::list<std::pair<uint16_t, double> >& keywords, std::list<uint16_t>& afterStrip,
@@ -64,7 +69,7 @@ keyWordsForReceiver(const std::list<uint16_t>& wholeSet, std::list<uint16_t>& fo
 
 // read rows from the dataset into the buf
 void
-extractKeyWordsRows(const std::list<std::string>& fileNames, const std::list<uint16_t>& keywords, std::list<std::string>& buf);
+extractKeyWordsRows(const std::list<std::string>& fileNames, const std::list<uint16_t>& keywords, const std::string& outputDir);
 
 
 #endif // FILE_HANDLER_H

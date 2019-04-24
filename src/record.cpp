@@ -4,6 +4,37 @@
 #include "tinycrypt/tc_ecc_platform_specific.h"
 #include "tinycrypt/tc_ecc_dsa.h"
 #include "tinycrypt/tc_constants.h"
+#include <fcntl.h>
+#include <unistd.h>
+
+int record_prng(uint8_t *dest, unsigned int size) 
+{
+  /* input sanity check: */
+  if (dest == (uint8_t *) 0 || (size <= 0))
+    return 0;
+
+  int fd = open("/dev/urandom", O_RDONLY | O_CLOEXEC);
+  if (fd == -1) {
+    fd = open("/dev/random", O_RDONLY | O_CLOEXEC);
+    if (fd == -1) {
+      return 0;
+    }
+  }
+
+  char *ptr = (char *)dest;
+  size_t left = (size_t) size;
+  while (left > 0) {
+    ssize_t bytes_read = read(fd, ptr, left);
+    if (bytes_read <= 0) { // read failed
+      close(fd);
+      return 0;
+    }
+    left -= bytes_read;
+    ptr += bytes_read;
+  }
+  close(fd);
+  return 1;
+}
 
 /**
    Record Format
@@ -24,7 +55,7 @@
 
 LedgerRecord::LedgerRecord(const uint8_t* record, uint32_t recordSize)
 {
-  m_record = (uint8_t*) malloc(recordSize);
+  m_record = new uint8_t[recordSize];
   m_recordSize = recordSize;
   memcpy(m_record, record, m_recordSize);
 }
@@ -60,7 +91,7 @@ LedgerRecord::LedgerRecord(const uint8_t* previousBlock,
     std::cout << "Cannot SHA final" << std::endl;
     return;
   }
-  tc_uECC_set_rng(&default_CSPRNG);
+  tc_uECC_set_rng(&record_prng);
   uint8_t* sig = (uint8_t*) malloc(ECC_SIG_LENGTH);
   if (tc_uECC_sign(eccKey, tag, TAG_LENGTH, sig, tc_uECC_secp256r1()) == 0) {
     std::cout << "Cannot ECC Sign" << std::endl;
@@ -68,13 +99,18 @@ LedgerRecord::LedgerRecord(const uint8_t* previousBlock,
   }
 
   m_recordSize = TAG_LENGTH * 2 + payloadSize + sizeof(uint32_t) * 2 + ECC_SIG_LENGTH;
-  m_record = (uint8_t*) malloc(m_recordSize);
+  m_record = new uint8_t[m_recordSize];
   memcpy(m_record, tag, TAG_LENGTH);
   memcpy(m_record, previousBlock, TAG_LENGTH);
   memcpy(m_record, (uint8_t*)&uid, sizeof(uint32_t));
   memcpy(m_record, (uint8_t*)&payloadSize, sizeof(uint32_t));
   memcpy(m_record, payload, payloadSize);
   memcpy(m_record, sig, ECC_SIG_LENGTH);
+}
+
+LedgerRecord::~LedgerRecord()
+{
+  delete[] m_record;
 }
 
 const uint8_t*

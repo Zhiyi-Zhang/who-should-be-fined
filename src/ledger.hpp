@@ -13,9 +13,6 @@ public:
   void
   addRecord(const LedgerRecord& record);
 
-  LedgerRecord
-  getFrontRecord();
-
   // size should be larger than m_unSyncByteCounter
   void
   prepareSync(uint8_t* syncPayload);

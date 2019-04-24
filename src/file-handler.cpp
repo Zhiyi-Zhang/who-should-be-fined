@@ -1,5 +1,5 @@
 #include "file-handler.hpp"
-#include "isaac.hpp"
+#include "crypto-helper.hpp"
 #include <sstream>
 #include <fstream>
 #include <random>
@@ -90,6 +90,19 @@ parseHeatMapOnlyKeys(const std::string& fileName)
   return keywords;
 }
 
+std::list<uint16_t>
+parseKeyWordsFile(const std::string& fileName)
+{
+  std::list<uint16_t> keywords;
+  std::ifstream data(fileName);
+  std::string line;
+  while(std::getline(data, line)) {
+    keywords.push_back(std::stoi(line));
+  }
+  data.close();
+  return keywords;
+}
+
 void
 stripPopularRecords(const std::list<std::pair<uint16_t, double> >& keywords, std::list<uint16_t>& afterStrip,
                     std::list<uint16_t>& popularKeys, double threshold)
@@ -113,18 +126,12 @@ stripPopularRecords(const std::list<std::pair<uint16_t, double> >& keywords, std
 void
 shuffleList(std::list<uint16_t>& keywords)
 {
-  uint64_t seedVal = 0;
-  std::ifstream urandom("/dev/urandom", std::ios::in|std::ios::binary);
-  if (urandom) {
-    urandom.read(reinterpret_cast<char*>(&seedVal), sizeof(seedVal));
-  }
-  else {
-    std::cerr << "Cannot read random value from /dev/urandom" << std::endl;
-  }
+  // csprng
+  uint64_t seedVal = readRandInt64();
+  isaac64_engine generator(seedVal);
 
   // shuffle
   std::vector<std::reference_wrapper<const uint16_t> > vec(keywords.begin(), keywords.end());
-  isaac64_engine generator(seedVal);
   std::shuffle(vec.begin(), vec.end(), generator);
 
   // copy the shuffled sequence into a new list
@@ -151,10 +158,11 @@ keyWordsForReceiver(const std::list<uint16_t>& wholeSet, std::list<uint16_t>& fo
 }
 
 void
-extractKeyWordsRows(const std::list<std::string>& fileNames, const std::list<uint16_t>& keywords,std::list<std::string>& buf)
+extractKeyWordsRows(const std::list<std::string>& fileNames, const std::list<uint16_t>& keywords, const std::string& outputDir)
 {
   auto keywordsIt = keywords.begin();
   bool match = false;
+  std::string keyword;
   std::string line;
   std::string rows;
 
@@ -163,10 +171,14 @@ extractKeyWordsRows(const std::list<std::string>& fileNames, const std::list<uin
     while(std::getline(data, line)) {
       if (line.find(":") != std::string::npos) {
         if (rows.size() > 0) {
-          buf.push_back(rows);
+          std::ofstream keywordRows;
+          keywordRows.open(outputDir + "/" + keyword);
+          keywordRows << rows << std::endl;
+          keywordRows.close();
           rows.clear();
         }
         if (line == std::to_string(*keywordsIt) + ":") {
+          keyword = std::to_string(*keywordsIt);
           keywordsIt++;
           match = true;
         }
@@ -184,7 +196,10 @@ extractKeyWordsRows(const std::list<std::string>& fileNames, const std::list<uin
 
   // insert the results for the last keyword
   if (rows.size() > 0) {
-    buf.push_back(rows);
+    std::ofstream keywordRows;
+    keywordRows.open(outputDir + "/" + keyword);
+    keywordRows << rows << std::endl;
+    keywordRows.close();
   }
   return;
 }

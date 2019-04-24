@@ -35,6 +35,8 @@ public:
                uint32_t uid,
                const uint8_t* eccKey, uint32_t eccKeySize);
 
+  ~LedgerRecord();
+
   const uint8_t*
   getSelfTag() const;
 

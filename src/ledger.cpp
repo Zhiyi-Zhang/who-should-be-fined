@@ -12,19 +12,13 @@ Ledger::addRecord(const LedgerRecord& record)
   m_ledger.insert(std::pair<std::string, LedgerRecord>(m_frontEnd, record));
 }
 
-LedgerRecord
-Ledger::getFrontRecord()
-{
-  return m_ledger[m_frontEnd];
-}
-
 void
 Ledger::prepareSync(uint8_t* syncPayload)
 {
-  const LedgerRecord& record = m_ledger[m_frontEnd];
-  while (record.getBase64SelfTag() != m_syncedPoint) {
-    memcpy(syncPayload, record.m_record, record.m_recordSize);
-    record = m_ledger[record.getBase64PreviousRecordTag];
+  auto it = m_ledger.find(m_frontEnd);
+  while (it->second.getBase64SelfTag() != m_syncedPoint && it != m_ledger.end()) {
+    memcpy(syncPayload, it->second.m_record, it->second.m_recordSize);
+    it = m_ledger.find(it->second.getBase64PreviousRecordTag());
   }
   m_syncedPoint = m_frontEnd;
 }
