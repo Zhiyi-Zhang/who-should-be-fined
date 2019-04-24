@@ -1,7 +1,7 @@
 #ifndef OT_CONFIG_H
 #define OT_CONFIG_H
 
-#define NOTS 16
+#define NOTS 1
 
 #define HASHBYTES 32
 #define HASHBITS (HASHBYTES * 8)
