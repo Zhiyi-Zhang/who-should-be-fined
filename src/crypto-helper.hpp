@@ -12,6 +12,12 @@ readRandInt64();
 void
 generateRandomBytes(uint8_t* output, unsigned int size);
 
+std::string
+base64_encode(const uint8_t* input, uint32_t len);
+
+std::vector<uint8_t>
+base64_decode(std::string const& input);
+
 // will allocate output_value via new. Pls do delete[] output_value after calling this func
 int
 aes128_cbc_encrypt(const uint8_t* input_value, uint32_t input_size,
@@ -20,7 +26,7 @@ aes128_cbc_encrypt(const uint8_t* input_value, uint32_t input_size,
 
 // will allocate output_value via new. Pls do delete[] output_value after calling this func
 int
-aes128_cbc_decrypt(const uint8_t* input_value, uint8_t input_size,
+aes128_cbc_decrypt(const uint8_t* input_value, uint32_t input_size,
                    uint8_t** output_value, uint32_t& output_size, const uint8_t* aes_key);
 
 void
