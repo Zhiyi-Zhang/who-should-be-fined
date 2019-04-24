@@ -92,12 +92,31 @@ int
 main(int argc, char* argv[])
 {
   std::string input = "abcdefg1234567abcdefg1234567abcdefg1234567abcdefg1234567abcdefg1234567abcdefg1234567abcdefg1234567";
-  
-  uint8_t* aesKey = nullptr;
-  // generateAesKey(generator, aesKey);
+  uint8_t aesKey[16] = {0};
+  uint8_t iv[16] = {0};
+  generateRandomBytes(aesKey, 16);
+  generateRandomBytes(iv, 16);
+  for (int i = 0; i < 16; ++i) {
+    std::cout << aesKey[i] << " ";
+  }
+  std::cout << std::endl;
+  for (int i = 0; i < 16; ++i) {
+    std::cout << iv[i] << " ";
+  }
+  std::cout << std::endl;
 
+  uint8_t* output = nullptr;
+  uint32_t usedSize = 0;
+  aes128_cbc_encrypt((uint8_t*)input.c_str(), input.size(), &output, usedSize, iv, aesKey);
 
+  uint8_t* decrypted = nullptr;
+  uint32_t usedSizeDec = 0;
+  aes128_cbc_decrypt(output, usedSize, &decrypted, usedSizeDec, aesKey);
 
-  delete[] aesKey;
+  std::string afterDec((char*)decrypted, usedSizeDec);
+  std::cout << afterDec << std::endl << input << std::endl;
+
+  delete[] decrypted;
+  delete[] output;
   return 0;
 }

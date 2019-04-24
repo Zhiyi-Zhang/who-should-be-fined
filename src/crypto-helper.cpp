@@ -23,7 +23,6 @@ generateRandomBytes(uint8_t* output, unsigned int size)
 {
   uint64_t seedVal = readRandInt64();
   isaac64_engine generator(seedVal);
-  output = new uint8_t[size];
   unsigned int offset = 0;
   uint64_t randNum = 0;
   while (offset < size) {
@@ -35,7 +34,7 @@ generateRandomBytes(uint8_t* output, unsigned int size)
 
 int
 aes128_cbc_encrypt(const uint8_t* input_value, uint32_t input_size,
-                   uint8_t* output_value, uint32_t& output_size,
+                   uint8_t** output_value, uint32_t& output_size,
                    const uint8_t* aes_iv, const uint8_t* aes_key)
 {
   struct tc_aes_key_sched_struct schedule;
@@ -53,9 +52,9 @@ aes128_cbc_encrypt(const uint8_t* input_value, uint32_t input_size,
     memset(real_input + input_size, rem, rem);
 
     output_size = real_input_size + TC_AES_BLOCK_SIZE;
-    output_value = new uint8_t[output_size];
-    if (tc_cbc_mode_encrypt(output_value, output_size,
-                            real_input, input_size / TC_AES_BLOCK_SIZE + 1, aes_iv, &schedule) != TC_CRYPTO_SUCCESS) {
+    *output_value = new uint8_t[output_size];
+    if (tc_cbc_mode_encrypt(*output_value, output_size,
+                            real_input, real_input_size, aes_iv, &schedule) != TC_CRYPTO_SUCCESS) {
       std::cerr << "enc failed" << std::endl;
       delete[] real_input;
       return -3;
@@ -64,8 +63,8 @@ aes128_cbc_encrypt(const uint8_t* input_value, uint32_t input_size,
   }
   else {
     output_size = input_size + TC_AES_BLOCK_SIZE;
-    output_value = new uint8_t[output_size];
-    if (tc_cbc_mode_encrypt(output_value, output_size,
+    *output_value = new uint8_t[output_size];
+    if (tc_cbc_mode_encrypt(*output_value, output_size,
                             input_value, input_size, aes_iv, &schedule) != TC_CRYPTO_SUCCESS) {
       std::cerr << "enc failed" << std::endl;
       return -3;
@@ -76,7 +75,7 @@ aes128_cbc_encrypt(const uint8_t* input_value, uint32_t input_size,
 
 int
 aes128_cbc_decrypt(const uint8_t* input_value, uint8_t input_size,
-                   uint8_t* output_value, uint32_t& output_size, const uint8_t* aes_key)
+                   uint8_t** output_value, uint32_t& output_size, const uint8_t* aes_key)
 {
   struct tc_aes_key_sched_struct schedule;
   if (tc_aes128_set_decrypt_key(&schedule, aes_key) != TC_CRYPTO_SUCCESS) {
@@ -85,8 +84,8 @@ aes128_cbc_decrypt(const uint8_t* input_value, uint8_t input_size,
   }
 
   output_size = input_size - TC_AES_BLOCK_SIZE;
-  output_value = new uint8_t[output_size];
-  if (tc_cbc_mode_decrypt(output_value, input_size - TC_AES_BLOCK_SIZE,
+  *output_value = new uint8_t[output_size];
+  if (tc_cbc_mode_decrypt(*output_value, input_size - TC_AES_BLOCK_SIZE,
                           input_value + TC_AES_BLOCK_SIZE, input_size - TC_AES_BLOCK_SIZE,
                           input_value, &schedule) == 0) {
     std::cerr << "dec failed" << std::endl;
@@ -109,7 +108,7 @@ aes128_cbc_encrypt_file(const std::string& fileName, const std::string& outputFi
 
   uint8_t* encryptedContent = nullptr;
   uint32_t encryptedContentSize = 0;
-  aes128_cbc_encrypt((uint8_t*)pChars, length, encryptedContent, encryptedContentSize, iv, aesKey);
+  aes128_cbc_encrypt((uint8_t*)pChars, length, &encryptedContent, encryptedContentSize, iv, aesKey);
   ofstream fout;
   fout.open(outputFileName, ios::binary | ios::out);
   fout.write((char*)&encryptedContent, encryptedContentSize);
@@ -134,7 +133,7 @@ aes128_cbc_decrypt_file(const std::string& fileName, const std::string& outputFi
 
   uint8_t* decryptedContent = nullptr;
   uint32_t decryptedContentSize = 0;
-  aes128_cbc_decrypt((uint8_t*)pChars, length, decryptedContent, decryptedContentSize, aesKey);
+  aes128_cbc_decrypt((uint8_t*)pChars, length, &decryptedContent, decryptedContentSize, aesKey);
   ofstream fout;
   fout.open(outputFileName, ios::binary | ios::out);
   fout.write((char*)&decryptedContent, decryptedContentSize);
