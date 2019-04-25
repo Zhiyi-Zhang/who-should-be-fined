@@ -57,12 +57,6 @@ public:
   size_t m_recordSize;
 };
 
-std::string
-base64_encode(const uint8_t* input, uint32_t len);
-
-std::vector<uint8_t>
-base64_decode(std::string const& input);
-
 static inline uint32_t
 int32_from_int8(const uint8_t *input)
 {

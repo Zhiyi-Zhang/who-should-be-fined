@@ -3,7 +3,7 @@
 #include <fstream>
 
 void
-generateKeywordList()
+generateKeywordsForAllReceivers()
 {
   /*======================For The First Time Parse Data========================*/
   // // get the keywords
@@ -33,7 +33,6 @@ generateKeywordList()
 
   /*============================Shuffle static keywords===========================*/
   shuffleList(results);
-  // output the afterStrip to heatmap
   std::ofstream shuffledListFile;
   shuffledListFile.open("../../datasets/shuffled.txt");
   for (auto it = results.begin(); it != results.end(); it++) {
@@ -88,22 +87,14 @@ prepareDataToSend()
   extractKeyWordsRows(fileNames, keywordsA, "../../datasets/A");
 }
 
-int
-main(int argc, char* argv[])
+void
+testAESEncryption()
 {
-  std::string input = "abcdefg1234567abcdefg1234567abcdefg1234567abcdefg1234567abcdefg1234567abcdefg1234567abcdefg1234567";
+  std::string input = "abcdefg1234,567abcdefg1234,567\nabcdefg1234567abcdefg1234567abcdefg\n1234567abcdefg1234,567abcdefg1234567AAABBBCCCabcdefg1234567abcdefg1234567abcdefg1234567abcd,efg12345\n67abcdefg1234567abcdefg1234567abcdefg1234567AAABBBCCC";
   uint8_t aesKey[16] = {0};
   uint8_t iv[16] = {0};
   generateRandomBytes(aesKey, 16);
   generateRandomBytes(iv, 16);
-  for (int i = 0; i < 16; ++i) {
-    std::cout << aesKey[i] << " ";
-  }
-  std::cout << std::endl;
-  for (int i = 0; i < 16; ++i) {
-    std::cout << iv[i] << " ";
-  }
-  std::cout << std::endl;
 
   uint8_t* output = nullptr;
   uint32_t usedSize = 0;
@@ -114,9 +105,26 @@ main(int argc, char* argv[])
   aes128_cbc_decrypt(output, usedSize, &decrypted, usedSizeDec, aesKey);
 
   std::string afterDec((char*)decrypted, usedSizeDec);
-  std::cout << afterDec << std::endl << input << std::endl;
+  std::cout << "after decryption: \n" << afterDec << std::endl
+  << "before encryption: \n"  << input << std::endl;
 
   delete[] decrypted;
   delete[] output;
+}
+
+void
+testAesFile()
+{
+  uint8_t aesKey[16] = {0};
+  uint8_t iv[16] = {0};
+  generateRandomBytes(aesKey, 16);
+  generateRandomBytes(iv, 16);
+  aes128_cbc_encrypt_file("../../datasets/A/2", "../../datasets/A-enc/2", iv, aesKey);
+  aes128_cbc_decrypt_file("../../datasets/A-enc/2", "../../datasets/A-dec/2", aesKey);
+}
+
+int
+main(int argc, char* argv[])
+{
   return 0;
 }

@@ -5,6 +5,12 @@ netflix-prize-data
 datasets/A
 datasets/B
 datasets/C
+datasets/A-enc
+datasets/B-enc
+datasets/C-enc
+datasets/A-dec
+datasets/B-dec
+datasets/C-dec
 *.vscode
 FastOT/ot_receiver_for_AES
 FastOT/ot_receiver_test

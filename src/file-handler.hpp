@@ -12,17 +12,9 @@ static int TOTAL_RECEIVER = 3; // ID: 1, 2, 3
 static double LEAST_MAKE_SENSE_PERCENT = 0.75;
 static double POPUlAR_KEYWORD_THRESHOLD = 0.0015;
 
-// OT transfer loss rate: 1/5, so 4/5 will be received
+// Keyword Allocation Loss rate: 1/5, so 4/5 will be allocated to each receiver
 static int OT_LOSS_RATE_NUMERATOR = 1;
 static int OT_LOSS_RATE_DENOMINATOR = 5;
-
-static inline void
-initRangeSize(int totalRowNumber)
-{
-  double dropRowSize = (1 - LEAST_MAKE_SENSE_PERCENT * OT_LOSS_RATE_DENOMINATOR / (OT_LOSS_RATE_DENOMINATOR - OT_LOSS_RATE_NUMERATOR)) * totalRowNumber;
-  // RANGE_SIZE = (int)(dropRowSize * FIELD);
-  // assert(RANGE_SIZE * TOTAL_RECEIVER < FIELD);
-}
 
 static inline bool
 dropForReceiver(int rowNumber, int receiverID,
