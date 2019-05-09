@@ -8,27 +8,23 @@ rate = 1.0
 patterns = None
 
 def get_filename():
-    if len(sys.argv) < 2:
+    if len(sys.argv) < 6:
         print("Usage:", sys.argv[0], "file totalusernum totalcommonobjects pattern leakrate\n", file=sys.stderr)
         print(patternhelp, file=sys.stderr)
         exit(-1)
     return sys.argv[1]
 
 def get_totalusernum():
-    if len(sys.argv) >= 3:
+    if len(sys.argv) >= 6:
         return sys.argv[2]
-    else:
-        return "3"
 
 def get_totalobjectnum():
-    if len(sys.argv) >= 4:
+    if len(sys.argv) >= 6:
         return int(sys.argv[3].rstrip())
-    else:
-        return 1000
 
 def get_pattern():
     global patterns
-    if len(sys.argv) >= 5:
+    if len(sys.argv) >= 6:
         patterns = sys.argv[4].rstrip().split("+")
 
 def get_rate():
