@@ -42,9 +42,11 @@ def main():
             if (j & coef) > 0:
                 continue
             bi_n = cnts[j] + cnts[j ^ coef]
+            if bi_n == 0:
+                continue
             bi_p = tots[j] / (tots[j] + tots[j ^ coef])
             prob = binom.cdf(cnts[j], bi_n, bi_p)
-                if prob < (alpha / 2) or prob > (1.0 - alpha / 2):
+            if prob < (alpha / 2) or prob > (1.0 - alpha / 2):
                 print("Reject", i, "set:", j, "prob:", prob)
                 results[i] = True
                 break
