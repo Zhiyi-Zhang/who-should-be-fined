@@ -54,11 +54,11 @@ def main():
 
             prob = binom_test(cnts[j], bi_n, bi_p)
             if prob < alpha:
-                print("Reject", i, "set:", j, "prob:", prob)
+                # print("Reject", i, "set:", j, "prob:", prob)
                 results[i] = True
                 presults[i] = prob
                 break
-    print("Results:\t", results)
+    # print("Results:\t", results)
     accuracy = 1
     allFalse = True
     for i in range(num):
