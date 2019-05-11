@@ -40,7 +40,7 @@ def match_pattern(case):
         singlematch = True
         for j in range(len(pattern)):
             if j > len(case) - 1:
-                if int(pattern[len(pattern) - j - 1]) != 9:
+                if int(pattern[len(pattern) - j - 1]) == 1:
                     singlematch = False
                     break
                 else:
