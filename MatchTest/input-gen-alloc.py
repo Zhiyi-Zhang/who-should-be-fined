@@ -9,7 +9,7 @@ patterns = None
 
 def get_filename():
     if len(sys.argv) < 6:
-        print("Usage:", sys.argv[0], "file totalusernum totalcommonobjects pattern leakrate otType\n", file=sys.stderr)
+        print("Usage:", sys.argv[0], "file totalusernum totalcommonobjects pattern leakrate uniquenum\n", file=sys.stderr)
         print(patternhelp, file=sys.stderr)
         exit(-1)
     return sys.argv[1]
@@ -32,11 +32,11 @@ def get_rate():
     if len(sys.argv) >= 6:
         rate = float(sys.argv[5].rstrip())
 
-def get_otType():
+def get_uniquenum():
     if len(sys.argv) >= 7:
-        return sys.argv[6].rstrip()
+        return int(sys.argv[6].rstrip())
     else:
-        return "1-2"
+        return 0
 
 def countSetBits(n):
     count = 0
@@ -72,35 +72,21 @@ def match_pattern(case):
 def main():
     usernum = int(get_totalusernum().rstrip())
     usernump2 = 2 ** usernum
-    otType = get_otType()
-    print(otType)
 
     tots = np.zeros(usernump2, dtype=int)
     totalObjects = get_totalobjectnum()
+    uniqueness = get_uniquenum()
+    if uniqueness != 0:
+        totalObjects -= uniqueness * usernum
     cnts = np.zeros(usernump2, dtype=int)
     get_rate()
-    if otType == "1-2":
-        totsvalue = totalObjects / usernump2
-        for i in range(len(tots)):
-            tots[i] = totsvalue
-            if match_pattern(bin(i)[2:]) == True:
-                cnts[i] = totsvalue * rate
-    elif otType == "2-3":
-        dnom = 3 ** usernum
-        for i in range(len(tots)):
-            setbits = countSetBits(i)
-            tots[i] = totalObjects * (2 ** setbits) / dnom
-            if match_pattern(bin(i)[2:]) == True:
-                cnts[i] = tots[i] * rate
-    elif otType == "3-4":
-        dnom = 4 ** usernum
-        for i in range(len(tots)):
-            setbits = countSetBits(i)
-            tots[i] = totalObjects * (3 ** setbits) / dnom
-            if match_pattern(bin(i)[2:]) == True:
-                cnts[i] = tots[i] * rate
-    else:
-        print("cannot recognize ot type")
+    totsvalue = totalObjects / usernump2
+    for i in range(len(tots)):
+        tots[i] = totsvalue
+        if countSetBits(i) == 1:
+            tots[i] += uniqueness
+        if match_pattern(bin(i)[2:]) == True:
+            cnts[i] = tots[i] * rate
 
     with open(get_filename(), 'w+') as f:
         f.write(get_totalusernum())
