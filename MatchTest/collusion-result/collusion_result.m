@@ -1,4 +1,4 @@
-function non_collusion_result(name1,name2,name3)
+function collusion_result(name1,name2,name3)
 a = textread(name1,'','delimiter',',','emptyvalue',NaN);
 b = textread(name2,'','delimiter',',','emptyvalue',NaN);
 c = textread(name3,'','delimiter',',','emptyvalue',NaN);
