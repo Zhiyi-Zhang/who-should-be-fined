@@ -2,11 +2,10 @@
 
 rm -rf non-collusion-result
 rm -rf collusion-result
-rm -rf different-ot-result
 
 mkdir non-collusion-result
 mkdir collusion-result
-mkdir different-ot-result
+
 
 
 Xarray=(0.01 0.015 0.02 0.025 0.03 0.04 0.05 0.1 0.5 0.8 1)
@@ -23,8 +22,6 @@ Pattern6_two=(911999+901999 991199 999119)
 Pattern6_three=(911909+900919 911099 910199+901199)
 # 6 total node, 6 node collusion
 Pattern6_six=(111000+100111 111111 111001)
-
-OTs=(1-2 2-3 3-4)
 
 #######################################SINGLE LEAKER############################
 # create plot input file
@@ -90,37 +87,42 @@ OTs=(1-2 2-3 3-4)
 # done
 
 # #######################################DIFF OT############################
-# # create plot input file
-# for i in "${Pattern6_single[@]}"
-# do
-#   touch different-ot-result/${i}
-# done
-# for i in "${Pattern6_three[@]}"
-# do
-#   touch different-ot-result/${i}
-# done
-# for i in "${OTs[@]}"
-# do
-#   for j in "${Pattern6_single[@]}"
-#   do
-#     ./test.py different-ot/${j}-${i}-0.9.txt ${i} >> different-ot-result/${j}
-#   done
-#   for j in "${Pattern6_three[@]}"
-#   do
-#     ./test.py different-ot/${j}-${i}-0.9.txt ${i} >> different-ot-result/${j}
-#   done
-# done
+rm -rf different-ot-result
+mkdir different-ot-result
+
+OTs=(1-2 2-3 3-4)
+
+# create plot input file
+for i in "${Pattern6_single[@]}"
+do
+  touch different-ot-result/${i}
+done
+for i in "${Pattern6_three[@]}"
+do
+  touch different-ot-result/${i}
+done
+for i in "${OTs[@]}"
+do
+  for j in "${Pattern6_single[@]}"
+  do
+    ./test.py different-ot/${j}-${i}-0.9.txt ${i} >> different-ot-result/${j}
+  done
+  for j in "${Pattern6_three[@]}"
+  do
+    ./test.py different-ot/${j}-${i}-0.9.txt ${i} >> different-ot-result/${j}
+  done
+done
 
 #######################################DIFF ALLOC############################
-rm -rf different-alloc-result
-mkdir different-alloc-result
+# rm -rf different-alloc-result
+# mkdir different-alloc-result
 
-Alloc=(0 100 300 500 1000 2000)
+# Alloc=(0 100 300 500 1000 2000)
 
-touch different-alloc-result/999991
-touch different-alloc-result/911099
-for i in "${Alloc[@]}"
-do
-  ./test.py different-alloc/999991-${i}.txt ${i} >> different-alloc-result/999991
-  ./test.py different-alloc/911099-${i}.txt ${i} >> different-alloc-result/911099
-done
+# touch different-alloc-result/999991
+# touch different-alloc-result/911099
+# for i in "${Alloc[@]}"
+# do
+#   ./test.py different-alloc/999991-${i}.txt ${i} >> different-alloc-result/999991
+#   ./test.py different-alloc/911099-${i}.txt ${i} >> different-alloc-result/911099
+# done
