@@ -34,17 +34,17 @@ def main():
     totalObjects = get_totalobjectnum()
     uniqueness = get_uniquenum()
     otType = get_ot()
-    otDomi = 2.0
+    otN = 2.0
 
     if otType == "1-2":
-      otDomi = 2.0
+      otN = 2.0
     elif otType == "2-3":
-      otDomi = 3.0
+      otN = 3.0
     elif otType == "3-4":
-      otDomi = 4.0
+      otN = 4.0
 
-    rate = otDomi ** usernum / (totalObjects - usernum*uniqueness)
-    print(otType + " " + str(usernum) + " " + str(rate) + " " + "1")
+    rate = otN ** usernum / (totalObjects - usernum*uniqueness)
+    print(otType + " " + str(usernum) + " " + str(uniqueness) + " " + str(rate) + " " + "1")
 
 if __name__ == "__main__":
     main()

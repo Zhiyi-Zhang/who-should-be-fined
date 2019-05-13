@@ -48,7 +48,7 @@ def main():
       otN = 4.0
 
     rate = 1.0 / (uniqueness + (totalObjects - usernum*uniqueness)*otK/(otN ** usernum))
-    print(otType + " " + str(usernum) + " " + str(rate) + " " + "1")
+    print(otType + " " + str(usernum) + " " + str(uniqueness) + " " + str(rate) + " " + "1")
 
 if __name__ == "__main__":
     main()

@@ -5,7 +5,7 @@ Pattern6_two=(911999+901999 991199 999119)
 # 6 total node, 3 node collusion
 Pattern6_three=(911909+901919 911099 910199+901199)
 # 6 total node, 6 node collusion
-Pattern6_six=(111000+100111 111111 111001)
+Pattern6_six=(111000+100111 111111 110000)
 
 OTs=(1-2 2-3 3-4)
 

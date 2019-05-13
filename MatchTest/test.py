@@ -69,8 +69,8 @@ def main():
                     results[i] = True
                     presults[i] = prob
 
-    print("Results:\t", results)
-    print("Error Rate:\t", presults)
+    #print("Results:\t", results)
+    #print("Error Rate:\t", presults)
     accuracy = 1
     allFalse = True
     for i in range(num):
