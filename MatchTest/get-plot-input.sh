@@ -83,42 +83,42 @@ do
 done
 
 # #######################################DIFF OT############################
-# rm -rf different-ot-result
-# mkdir different-ot-result
+rm -rf different-ot-result
+mkdir different-ot-result
 
-# OTs=(1-2 2-3 3-4)
+OTs=(1-2 2-3 3-4)
 
-# # create plot input file
-# for i in "${Pattern6_single[@]}"
-# do
-#   touch different-ot-result/${i}
-# done
-# for i in "${Pattern6_three[@]}"
-# do
-#   touch different-ot-result/${i}
-# done
-# for i in "${OTs[@]}"
-# do
-#   for j in "${Pattern6_single[@]}"
-#   do
-#     ./test.py different-ot/${j}-${i}-0.9.txt ${i} >> different-ot-result/${j}
-#   done
-#   for j in "${Pattern6_three[@]}"
-#   do
-#     ./test.py different-ot/${j}-${i}-0.9.txt ${i} >> different-ot-result/${j}
-#   done
-# done
+# create plot input file
+for i in "${Pattern6_single[@]}"
+do
+  touch different-ot-result/${i}
+done
+for i in "${Pattern6_three[@]}"
+do
+  touch different-ot-result/${i}
+done
+for i in "${OTs[@]}"
+do
+  for j in "${Pattern6_single[@]}"
+  do
+    ./test.py different-ot/${j}-${i}-0.9.txt ${i} >> different-ot-result/${j}
+  done
+  for j in "${Pattern6_three[@]}"
+  do
+    ./test.py different-ot/${j}-${i}-0.9.txt ${i} >> different-ot-result/${j}
+  done
+done
 
 #######################################DIFF ALLOC############################
-# rm -rf different-alloc-result
-# mkdir different-alloc-result
+rm -rf different-alloc-result
+mkdir different-alloc-result
 
-# Alloc=(0 100 300 500 1000 2000)
+Alloc=(0 100 300 500 1000 2000)
 
-# touch different-alloc-result/999991
-# touch different-alloc-result/911099
-# for i in "${Alloc[@]}"
-# do
-#   ./test.py different-alloc/999991-${i}.txt ${i} >> different-alloc-result/999991
-#   ./test.py different-alloc/911099-${i}.txt ${i} >> different-alloc-result/911099
-# done
+touch different-alloc-result/999991
+touch different-alloc-result/911099
+for i in "${Alloc[@]}"
+do
+  ./test.py different-alloc/999991-${i}.txt ${i} >> different-alloc-result/999991
+  ./test.py different-alloc/911099-${i}.txt ${i} >> different-alloc-result/911099
+done
