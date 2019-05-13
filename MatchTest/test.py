@@ -63,10 +63,14 @@ def main():
             prob = binom_test(cnts[j], bi_n, bi_p)
             if prob < alpha:
                 # print("Reject", i, "set:", j, "prob:", prob)
-                results[i] = True
-                presults[i] = min(prob, presults[i])
+                if results[i] == True:
+                    presults[i] = min(prob, presults[i])
+                else:
+                    results[i] = True
+                    presults[i] = prob
 
     print("Results:\t", results)
+    print("Error Rate:\t", presults)
     accuracy = 1
     allFalse = True
     for i in range(num):
