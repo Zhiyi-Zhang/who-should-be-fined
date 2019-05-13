@@ -5,7 +5,6 @@ import numpy as np
 from scipy.stats import binom
 from scipy.stats import binom_test
 
-
 def get_filename():
     if len(sys.argv) < 2:
         print("Usage:", sys.argv[0], "file", file=sys.stderr)
@@ -15,6 +14,12 @@ def get_filename():
 def get_outputparam():
     return sys.argv[2]
 
+def countSetBits(n):
+    count = 0
+    while (n):
+        count += n & 1
+        n >>= 1
+    return count
 
 def main():
     with open(get_filename()) as f:
@@ -29,10 +34,20 @@ def main():
     # print("Leaked:\t", cnts)
     # print("Total:\t", tots)
 
-    # Hypothesis testing
-    alpha = 0.05  # Significance level
     results = np.zeros(num, dtype=bool)
     presults = np.zeros(num, dtype=float)
+
+    # check single leaker
+    counter = 0
+    for i in range(nump2):
+        if i == 2**counter:
+            if cnts[i] > 0:
+                results[counter] = True
+                presults[counter] = 0
+            counter += 1
+
+    # Hypothesis testing
+    alpha = 0.05  # Significance level
     for i in range(num):
         # Null hypothesis: peer[i] is irrelevant
         coef = 1 << i
@@ -45,20 +60,17 @@ def main():
                 continue
             bi_p = tots[j] / (tots[j] + tots[j ^ coef])
 
-            # prob = binom.cdf(cnts[j], bi_n, bi_p)
-            # if prob < (alpha / 2) or prob > (1.0 - alpha / 2):
-            #     print("Reject", i, "set:", j, "prob:", prob)
-            #     results[i] = True
-            #     presults[i] = prob
-            #     break
-
             prob = binom_test(cnts[j], bi_n, bi_p)
             if prob < alpha:
                 # print("Reject", i, "set:", j, "prob:", prob)
-                results[i] = True
-                presults[i] = prob
-                break
-    # print("Results:\t", results)
+                if results[i] == True:
+                    presults[i] = min(prob, presults[i])
+                else:
+                    results[i] = True
+                    presults[i] = prob
+
+    #print("Results:\t", results)
+    #print("Error Rate:\t", presults)
     accuracy = 1
     allFalse = True
     for i in range(num):

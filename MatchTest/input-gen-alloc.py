@@ -84,7 +84,7 @@ def main():
     for i in range(len(tots)):
         tots[i] = totsvalue
         if countSetBits(i) == 1:
-            tots[i] += uniqueness
+            tots[i] += uniqueness/2
         if match_pattern(bin(i)[2:]) == True:
             cnts[i] = tots[i] * rate
 

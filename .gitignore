@@ -16,3 +16,4 @@ FastOT/ot_receiver_for_AES
 FastOT/ot_receiver_test
 FastOT/ot_sender_test
 FastOT/ot_sender_for_AES
+*.DS_*
