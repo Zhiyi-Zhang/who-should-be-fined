@@ -6,9 +6,6 @@ b = input(7:12,:);
 c = input(13:18,:);
 sz= size(a);
 for i=1:sz(1)
-    a(i,2) = 1-a(i,2);
-    b(i,2) = 1-b(i,2);
-    c(i,2) = 1-c(i,2);
     if a(i,2)<1e-12
         a(i,2) = 1e-12;
     end
@@ -44,22 +41,22 @@ hold on
 plot(c(:,1),c(:,2),'linewidth',5.0,'Color',[0.87058824300766 0.490196079015732 0])
 hold on
 
-my_yticks = [1e-10 1e-8 1e-6 1e-4 1e-2 1 100];
-my_ylabels = {'<10^{-10}','10^{-8}','10^{-6}','10^{-4}','10^{-2}','1','10^{2}'};
+my_yticks = [1e-10 1e-8 1e-6 1e-4 1e-2 1 10 100];
+my_ylabels = {'<10^{-10}','10^{-8}','10^{-6}','10^{-4}','10^{-2}','1','10','100'};
 
 l = 1;
-r = 7;
-for j=1:7
-    i=8-j;
-    tmp = min([min(a(:,2)),min(b(:,2)),min(c(:,2))]);
+r = 8;
+for j=1:8
+    i=9-j;
+    tmp = min([min(a(:,2)),min(b(:,2)),min(c(:,2))])
     if tmp>my_yticks(i)
         l = i;
         break;
     end
 end
 
-for i=1:7
-    tmp = max([max(a(:,2)),max(b(:,2)),max(c(:,2))]);
+for i=1:8
+    tmp = max([max(a(:,2)),max(b(:,2)),max(c(:,2))])
     if tmp<my_yticks(i)
         r = i;
         break;

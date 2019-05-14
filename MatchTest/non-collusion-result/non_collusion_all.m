@@ -1,7 +1,7 @@
 function non_collusion_all()
 clear all;
 close all;
-non_collusion_result('single-leaker-alloc.txt','single-leaker-3-4_alloc.txt');
+non_collusion_result('single-leaker-alloc.txt');
 
 clear all;
 close all;
