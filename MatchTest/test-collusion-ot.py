@@ -7,12 +7,21 @@ from scipy.stats import binom_test
 
 def get_filename():
     if len(sys.argv) < 2:
-        print("Usage:", sys.argv[0], "file output", file=sys.stderr)
+        print("Usage:", sys.argv[0], "file receiverNum ot leakrate uniqueness", file=sys.stderr)
         exit(-1)
     return sys.argv[1]
 
-def get_output():
+def get_receiverNum():
     return sys.argv[2]
+
+def get_ot():
+    return sys.argv[3]
+
+def get_leakrate():
+    return sys.argv[4]
+
+def get_uniqueness():
+    return sys.argv[5]
 
 def countSetBits(n):
     count = 0
@@ -79,7 +88,15 @@ def main():
             accuracy = accuracy * (1 - presults[i])
     if allFalse == True:
         accuracy = 0
-    print(get_output() + ",", accuracy)
+
+    otOutput = ""
+    if get_ot() == "1-2":
+      otOutput = "0.5"
+    elif get_ot() == "2-3":
+      otOutput = "0.67"
+    elif get_ot() == "3-4":
+      otOutput = "0.75"
+    print(otOutput + " " + get_receiverNum() + " " + get_uniqueness() + " " + get_leakrate() + " ", accuracy)
 
 if __name__ == "__main__":
     main()
