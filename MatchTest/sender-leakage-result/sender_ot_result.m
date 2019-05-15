@@ -1,4 +1,4 @@
-function single_leaker_ot_result(name1)
+function single_ot_result(name1)
 input = textread(name1,'','delimiter',' ','emptyvalue',NaN);
 input = input(:,[4 5]);
 a = input(1:11,:);

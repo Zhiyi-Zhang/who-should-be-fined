@@ -5,7 +5,7 @@ sender_alloc_result('sender-alloc.txt');
 
 clear all;
 close all;
-sender_alloc12_result('sender-alloc.txt');
+sender_ot12_result('sender-ot.txt');
 
 clear all;
 close all;
