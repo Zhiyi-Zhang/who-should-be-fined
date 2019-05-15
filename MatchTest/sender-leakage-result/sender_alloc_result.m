@@ -1,4 +1,4 @@
-function non_collusion_result(name1)
+function sender_alloc_result(name1)
 input = textread(name1,'','delimiter',' ','emptyvalue',NaN);
 input = input(:,[3 5]);
 a = input(1:6,:);
@@ -6,6 +6,9 @@ b = input(7:12,:);
 c = input(13:18,:);
 sz= size(a);
 for i=1:sz(1)
+    a(i,2) = 1 - a(i,2);
+    b(i,2) = 1 - b(i,2);
+    c(i,2) = 1 - c(i,2);
     if a(i,2)<1e-12
         a(i,2) = 1e-12;
     end
@@ -16,9 +19,9 @@ for i=1:sz(1)
         c(i,2) = 1e-12;
     end
 end
-a(:,2) = a(:,2) .* 100;
-b(:,2) = b(:,2) .* 100;
-c(:,2) = c(:,2) .* 100;
+a(:,2) = a(:,2) .* 100
+b(:,2) = b(:,2) .* 100
+c(:,2) = c(:,2) .* 100
 
 figure
 h1=axes;
@@ -48,7 +51,7 @@ l = 1;
 r = 8;
 for j=1:8
     i=9-j;
-    tmp = min([min(a(:,2)),min(b(:,2)),min(c(:,2))])
+    tmp = min([min(a(:,2)),min(b(:,2)),min(c(:,2))]);
     if tmp>my_yticks(i)
         l = i;
         break;
@@ -56,7 +59,7 @@ for j=1:8
 end
 
 for i=1:8
-    tmp = max([max(a(:,2)),max(b(:,2)),max(c(:,2))])
+    tmp = max([max(a(:,2)),max(b(:,2)),max(c(:,2))]);
     if tmp<my_yticks(i)
         r = i;
         break;
