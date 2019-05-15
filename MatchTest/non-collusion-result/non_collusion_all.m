@@ -7,4 +7,8 @@ clear all;
 close all;
 single_leaker_ot_result('single-leaker-ot.txt');
 
+clear all;
+close all;
+single_leaker_12ot_result('single-leaker-ot.txt');
+
 end
