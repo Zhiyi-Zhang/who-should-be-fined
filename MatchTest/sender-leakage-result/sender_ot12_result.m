@@ -1,7 +1,7 @@
 function single_ot12_result(name1)
 input = textread(name1,'','delimiter',' ','emptyvalue',NaN);
 input = input(:,[4 5]);
-a = input(1:11,:);
+a = input(1:9,:);
 sz= size(a);
 for i=1:sz(1)
     a(i,2) = 1-a(i,2);
