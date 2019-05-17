@@ -71,7 +71,7 @@ def main():
 
     #print("Results:\t", results)
     #print("Error Rate:\t", presults)
-    accuracy = 1
+    accuracy = 1.0
     allFalse = True
     for i in range(num):
         if results[i] == True:
