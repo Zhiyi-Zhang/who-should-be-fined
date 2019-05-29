@@ -6,7 +6,7 @@ import numpy as np
 
 df = pd.read_csv("sender-alloc-1-2.txt", sep=" ")
 df["acc"] = 1 - df["acc"]
-df.loc[df["acc"] < 0.00000001, "acc"] = 0.00000001
+df.loc[df["acc"] < 0.00000001, "acc"] = 0.000000011
 print(df.head())
 
 fig = plt.figure()
