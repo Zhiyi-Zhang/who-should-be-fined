@@ -7,12 +7,27 @@ from scipy.stats import binom_test
 
 def get_filename():
     if len(sys.argv) < 2:
-        print("Usage:", sys.argv[0], "file output", file=sys.stderr)
+        print("Usage:", sys.argv[0], "file ot receiverNum uniqueness leakrate ", file=sys.stderr)
         exit(-1)
     return sys.argv[1]
 
-def get_output():
-    return sys.argv[2]
+def get_ot():
+    otstr = sys.argv[2]
+    if otstr == "1-2":
+        return "0.5"
+    elif otstr == "2-3":
+        return "0.67"
+    elif otstr == "3-4":
+        return "0.75"
+
+def get_receiverNum():
+    return sys.argv[3]
+
+def get_uniqueness():
+    return sys.argv[4]
+
+def get_leakrate():
+    return sys.argv[5]
 
 def countSetBits(n):
     count = 0
@@ -38,13 +53,13 @@ def main():
     presults = np.zeros(num, dtype=float)
 
     # check single leaker
-    counter = 0
-    for i in range(nump2):
-        if i == 2**counter:
-            if cnts[i] > 0:
-                results[counter] = True
-                presults[counter] = 0
-            counter += 1
+    # counter = 0
+    # for i in range(nump2):
+    #     if i == 2**counter:
+    #         if cnts[i] > 0:
+    #             results[counter] = True
+    #             presults[counter] = 0
+    #         counter += 1
 
     # Hypothesis testing
     alpha = 0.05  # Significance level
@@ -71,7 +86,7 @@ def main():
 
     #print("Results:\t", results)
     #print("Error Rate:\t", presults)
-    accuracy = 1.0
+    accuracy = 1
     allFalse = True
     for i in range(num):
         if results[i] == True:
@@ -79,7 +94,8 @@ def main():
             accuracy = accuracy * (1 - presults[i])
     if allFalse == True:
         accuracy = 0
-    print(get_output() + ",", accuracy)
+
+    print(get_ot() + " " + get_receiverNum() + " " + get_uniqueness() + " " + get_leakrate(), accuracy)
 
 if __name__ == "__main__":
     main()
