@@ -1,6 +1,3 @@
-[submodule "OTExtension"]
-	path = OTExtension
-	url = https://github.com/Zhiyi-Zhang/OTExtension.git
 [submodule "libOTe"]
 	path = libOTe
 	url = https://github.com/osu-crypto/libOTe.git
